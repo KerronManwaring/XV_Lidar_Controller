@@ -33,13 +33,14 @@ double Kp = 2.0;
 double Ki = 1.0;
 double Kd = 0.0;
 
-boolean motor_enable = true;        // to spin the laser or not.  No data when not spinning
+boolean motor_enable = true;         // to spin the laser or not.  No data when not spinning
 boolean raw_data = false;            // to retransmit the seiral data to the USB port
-boolean show_dist = true;           // controlled by ShowDist and HideDist commands
+boolean show_dist = true;            // controlled by ShowDist and HideDist commands
+boolean show_points = false;         // to show or hide data as cartesian x,y points 
 boolean show_rpm = false;            // controlled by ShowRPM and HideRPM commands
 boolean show_interval = false;       // true = show time interval, once per revolution, at angle=0
 boolean show_errors = false;         // Show CRC, signal strength and invalid data errors
-boolean aryAngles[N_ANGLES]; // array of angles to display
+boolean aryAngles[N_ANGLES];         // array of angles to display
 
 
 double pwm_val = 500;          // start with ~50% power
@@ -173,20 +174,24 @@ void loop() {
                       Serial.println(F("S"));
                   }
                 }
-                else {                                         // show clean data
-                  Serial.print(F("A,"));
-                  Serial.print(startingAngle + ix);
-                  Serial.print(F(","));
-                  Serial.print(int(aryDist[ix]));
-                  Serial.print(F(","));
-                  Serial.println(aryQuality[ix]);
-        
-                  // to print out X,Y cartesian points 
-                  // double x = aryDist[ix] * cos((startingAngle + ix)* 3.14/180); 
-                  // double y = aryDist[ix] * sin((startingAngle + ix)* 3.14/180);
-                  // Serial.print(x);
-                  // Serial.print(F(","));
-                  // Serial.println(y);
+                else {  
+      
+                  // show clean data
+                     if(!show_points){ 
+                      Serial.print(F("A,"));
+                      Serial.print(startingAngle + ix);
+                      Serial.print(F(","));
+                      Serial.print(int(aryDist[ix]));
+                      Serial.print(F(","));
+                      Serial.println(aryQuality[ix]);
+                     }
+                     if(show_points){  // show cartesian                 
+                      double x = aryDist[ix] * cos((startingAngle + ix)* 3.14/180); 
+                      double y = aryDist[ix] * sin((startingAngle + ix)* 3.14/180);
+                      Serial.print(x);
+                      Serial.print(F(","));
+                      Serial.println(y);
+                     }
                   
                 }
               }  // if (aryAngles[startingAngle + ix])
@@ -322,13 +327,13 @@ void initSerialCommands() {
   sCmd.addCommand("SetKi",         setKi);
   sCmd.addCommand("SetKd",         setKd);
   sCmd.addCommand("SetSampleTime", setSampleTime);
-
   sCmd.addCommand("MotorOff", motorOff);
   sCmd.addCommand("MotorOn",  motorOn);
-
   sCmd.addCommand("ShowRaw",  showRaw);
   sCmd.addCommand("HideRaw", hideRaw);
   sCmd.addCommand("ShowDist",  showDist);
+  sCmd.addCommand("ShowPoints",  showPoints);
+  sCmd.addCommand("HidePoints",  hidePoints);
   sCmd.addCommand("HideDist",  hideDist);
   sCmd.addCommand("ShowRPM",  showRPM);
   sCmd.addCommand("HideRPM",  hideRPM);
@@ -569,6 +574,16 @@ void motorCheck() {  // Make sure the motor RPMs are good else shut it down
     }
     motor_check_timer = millis();
   }
+}
+void showPoints() {
+  show_points = true;
+  Serial.println(F(" "));
+  Serial.println(F("Showing cartesian points"));
+}
+void hidePoints() {
+  show_points = false;
+  Serial.println(F(" "));
+  Serial.println(F("Hiding cartesian points"));
 }
 
 void hideRaw() {
