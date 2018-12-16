@@ -132,6 +132,20 @@ void setup() {
 }
 
 void loop() {
+  
+// Do what ever you want here
+
+}
+
+void serialEvent() { // Terminal serial 
+  sCmd.readSerial();
+}
+
+void serialEvent1() { // Lidar serial
+  Lidar();
+}
+
+void Lidar() {
   byte aryInvalidDataFlag[N_DATA_QUADS] = {0, 0, 0, 0}; // non-zero = INVALID_DATA_FLAG or STRENGTH_WARNING_FLAG is set
 
   sCmd.readSerial();  // check for incoming serial commands
