@@ -185,9 +185,11 @@ void loop() {
                       Serial.print(F(","));
                       Serial.println(aryQuality[ix]);
                      }
+                  
                      if(show_points){  // show cartesian                 
                       double x = aryDist[ix] * cos((startingAngle + ix)* 3.14/180); 
                       double y = aryDist[ix] * sin((startingAngle + ix)* 3.14/180);
+                      Serial.print(F("P,"));                      
                       Serial.print(x);
                       Serial.print(F(","));
                       Serial.println(y);
