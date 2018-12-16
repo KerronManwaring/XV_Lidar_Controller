@@ -180,6 +180,14 @@ void loop() {
                   Serial.print(int(aryDist[ix]));
                   Serial.print(F(","));
                   Serial.println(aryQuality[ix]);
+        
+                  // to print out X,Y cartesian points 
+                  // double x = aryDist[ix] * cos((startingAngle + ix)* 3.14/180); 
+                  // double y = aryDist[ix] * sin((startingAngle + ix)* 3.14/180);
+                  // Serial.print(x);
+                  // Serial.print(F(","));
+                  // Serial.println(y);
+                  
                 }
               }  // if (aryAngles[startingAngle + ix])
             }  // for (int ix = 0; ix < N_DATA_QUADS; ix++)
